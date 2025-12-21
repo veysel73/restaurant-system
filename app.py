@@ -7,6 +7,7 @@ import uuid
 import qrcode
 from io import BytesIO
 import base64
+from flask import request
 
 app = Flask(__name__)
 app.secret_key = 'gizli-anahtar-buraya-yaz'
@@ -323,7 +324,10 @@ def customer_with_table(table_number):
 @login_required(role='admin')
 def generate_qr(table_number):
     # QR kod için URL
-    qr_url = f"http://localhost:5000/customer/{table_number}"
+    base_url = request.host_url
+    qr_url = f"{base_url}customer/{table_number}"
+
+    
     
     # QR kod oluştur
     qr = qrcode.QRCode(
@@ -349,6 +353,5 @@ def generate_qr(table_number):
         "url": qr_url,
         "table_number": table_number
     })
-
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    app.run()

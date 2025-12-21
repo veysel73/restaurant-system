@@ -1,2 +1,6 @@
 flask
 gunicorn
+flask
+gunicorn
+qrcode
+pillow
