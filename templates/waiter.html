@@ -109,6 +109,84 @@
             text-align: center; color: #95a5a6; padding: 20px;
             font-style: italic;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #ecf0f1; }
+        
+        .header {
+            background: #16a085; color: white; padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header h1 { font-size: 28px; }
+        .logout-btn {
+            padding: 10px 20px; background: #e74c3c; color: white;
+            border: none; border-radius: 5px; cursor: pointer;
+        }
+        
+        .container { display: flex; height: calc(100vh - 80px); }
+        
+        .sidebar {
+            width: 350px; background: white; padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 20px; }
+            .logout-btn { padding: 8px 15px; font-size: 14px; }
+            
+            .container { flex-direction: column; height: auto; min-height: calc(100vh - 60px); }
+            
+            .sidebar { 
+                width: 100%; 
+                max-height: 40vh; 
+                border-bottom: 3px solid #16a085;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            
+            .main-content { padding: 15px; }
+            
+            .tables-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 10px;
+            }
+            
+            .table-card { padding: 20px; }
+            .table-number { font-size: 20px; }
+            .table-status { font-size: 12px; }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .status-buttons { flex-direction: column; }
+            .status-btn { padding: 12px; }
+        }
+        
+        @media (max-width: 480px) {
+            .header { padding: 12px; }
+            .header h1 { font-size: 18px; }
+            .logout-btn { padding: 6px 12px; font-size: 13px; }
+            
+            .sidebar { padding: 15px; }
+            .sidebar h3 { font-size: 16px; }
+            
+            .notification { padding: 12px; font-size: 14px; }
+            .notification strong { font-size: 16px; }
+            
+            .call-item { padding: 12px; font-size: 14px; }
+            .close-call-btn { padding: 6px 12px; font-size: 14px; }
+            
+            .tables-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 8px;
+            }
+            
+            .table-card { padding: 15px; }
+            .table-number { font-size: 18px; }
+            .status-badge { width: 12px; height: 12px; }
+        }
     </style>
 </head>
 <body>
