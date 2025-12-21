@@ -1,0 +1,14 @@
+{
+  "admin": {
+    "password": "123",
+    "role": "admin"
+  },
+  "mutfak": {
+    "password": "123",
+    "role": "kitchen"
+  },
+  "garson": {
+    "password": "123",
+    "role": "waiter"
+  }
+}

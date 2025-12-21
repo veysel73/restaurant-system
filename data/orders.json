@@ -1,0 +1,508 @@
+[
+  {
+    "id": "cc5343df-8138-45a1-86a1-0483b29fef21",
+    "table_number": 23,
+    "items": [
+      {
+        "id": "1",
+        "name": "Izgara Köfte",
+        "price": 120,
+        "quantity": 4
+      },
+      {
+        "id": "2",
+        "name": "Tavuk Şiş",
+        "price": 110,
+        "quantity": 4
+      },
+      {
+        "id": "8",
+        "name": "Mercimek Çorbası",
+        "price": 35,
+        "quantity": 3
+      }
+    ],
+    "total": 1025,
+    "status": "delivered",
+    "created_at": "2025-12-04T23:33:40.731399",
+    "updated_at": "2025-12-04T23:34:30.438601"
+  },
+  {
+    "id": "f7563628-bc49-4c02-bdca-eeca25b190a6",
+    "table_number": 26,
+    "items": [
+      {
+        "id": "9",
+        "name": "Ciğer",
+        "price": 180,
+        "quantity": 3
+      }
+    ],
+    "total": 540,
+    "status": "delivered",
+    "created_at": "2025-12-04T23:36:12.078465",
+    "updated_at": "2025-12-04T23:38:17.390193"
+  },
+  {
+    "id": "b3448e11-a7c6-43ea-83a5-3e41ba9c49b5",
+    "table_number": 14,
+    "items": [
+      {
+        "id": "1",
+        "name": "Izgara Köfte",
+        "price": 120,
+        "quantity": 2
+      },
+      {
+        "id": "2",
+        "name": "Tavuk Şiş",
+        "price": 110,
+        "quantity": 1
+      },
+      {
+        "id": "3",
+        "name": "Karışık Izgara",
+        "price": 180,
+        "quantity": 1
+      }
+    ],
+    "total": 530,
+    "status": "delivered",
+    "created_at": "2025-12-04T23:45:11.019188",
+    "updated_at": "2025-12-04T23:46:22.436140"
+  },
+  {
+    "id": "0de32f8d-fe99-4172-abd9-f25c80c3c146",
+    "table_number": 15,
+    "items": [
+      {
+        "id": "9",
+        "name": "Ciğer",
+        "price": 220,
+        "quantity": 3
+      }
+    ],
+    "total": 660,
+    "status": "delivered",
+    "created_at": "2025-12-04T23:52:32.240929",
+    "updated_at": "2025-12-04T23:54:15.966344"
+  },
+  {
+    "id": "b5200282-0869-4549-8158-99131d9f7e10",
+    "table_number": 19,
+    "items": [
+      {
+        "id": "3",
+        "name": "Karışık Izgara",
+        "price": 180,
+        "quantity": 10
+      }
+    ],
+    "total": 1800,
+    "status": "delivered",
+    "created_at": "2025-12-05T10:44:06.735564",
+    "updated_at": "2025-12-05T23:30:04.563802"
+  },
+  {
+    "id": "b4e5f180-bbda-4f51-9e4c-ef44281a1346",
+    "table_number": 11,
+    "items": [
+      {
+        "id": "7",
+        "name": "Baklava",
+        "price": 70,
+        "quantity": 1
+      },
+      {
+        "id": "4",
+        "name": "Ayran",
+        "price": 15,
+        "quantity": 1
+      },
+      {
+        "id": "3",
+        "name": "Karışık Izgara",
+        "price": 180,
+        "quantity": 1
+      },
+      {
+        "id": "2",
+        "name": "Tavuk Şiş",
+        "price": 110,
+        "quantity": 1
+      }
+    ],
+    "total": 375,
+    "status": "delivered",
+    "created_at": "2025-12-05T10:45:53.933294",
+    "updated_at": "2025-12-05T23:30:02.842529"
+  },
+  {
+    "id": "54d42eeb-2564-4937-aa67-44bc4db5e81e",
+    "table_number": 7,
+    "items": [
+      {
+        "id": "10",
+        "name": "Keledoş",
+        "price": 450,
+        "quantity": 6
+      }
+    ],
+    "total": 2700,
+    "status": "delivered",
+    "created_at": "2025-12-05T10:51:45.791806",
+    "updated_at": "2025-12-05T23:30:14.381683"
+  },
+  {
+    "id": "583e8b74-4ba7-454e-93b4-dfef79f54ba0",
+    "table_number": 6,
+    "items": [
+      {
+        "id": "8",
+        "name": "Mercimek Çorbası",
+        "price": 35,
+        "quantity": 1
+      },
+      {
+        "id": "7",
+        "name": "Baklava",
+        "price": 70,
+        "quantity": 1
+      },
+      {
+        "id": "6",
+        "name": "Künefe",
+        "price": 80,
+        "quantity": 3
+      },
+      {
+        "id": "5",
+        "name": "Kola",
+        "price": 20,
+        "quantity": 2
+      },
+      {
+        "id": "1",
+        "name": "Izgara Köfte",
+        "price": 120,
+        "quantity": 2
+      },
+      {
+        "id": "2",
+        "name": "Tavuk Şiş",
+        "price": 110,
+        "quantity": 1
+      }
+    ],
+    "total": 735,
+    "status": "delivered",
+    "created_at": "2025-12-05T23:29:29.976946",
+    "updated_at": "2025-12-05T23:30:19.261160"
+  },
+  {
+    "id": "9d5edbb8-0923-43bb-b68f-201e09b933aa",
+    "table_number": 19,
+    "items": [
+      {
+        "id": "4",
+        "name": "Ayran",
+        "price": 15,
+        "quantity": 1
+      },
+      {
+        "id": "3",
+        "name": "Karışık Izgara",
+        "price": 180,
+        "quantity": 1
+      },
+      {
+        "id": "2",
+        "name": "Tavuk Şiş",
+        "price": 110,
+        "quantity": 3
+      }
+    ],
+    "total": 525,
+    "status": "delivered",
+    "created_at": "2025-12-05T23:35:59.044488",
+    "updated_at": "2025-12-14T20:28:32.449425"
+  },
+  {
+    "id": "b9f65add-a6cf-4990-83db-c6aaac111af7",
+    "table_number": 17,
+    "items": [
+      {
+        "id": "4",
+        "name": "Ayran",
+        "price": 15,
+        "quantity": 2
+      },
+      {
+        "id": "8",
+        "name": "Mercimek Çorbası",
+        "price": 35,
+        "quantity": 1
+      },
+      {
+        "id": "7",
+        "name": "Baklava",
+        "price": 70,
+        "quantity": 1
+      },
+      {
+        "id": "9",
+        "name": "Ciğer",
+        "price": 220,
+        "quantity": 1
+      },
+      {
+        "id": "10",
+        "name": "Keledoş",
+        "price": 450,
+        "quantity": 3
+      },
+      {
+        "id": "1",
+        "name": "Izgara Köfte",
+        "price": 120,
+        "quantity": 1
+      },
+      {
+        "id": "2",
+        "name": "Tavuk Şiş",
+        "price": 110,
+        "quantity": 1
+      },
+      {
+        "id": "6",
+        "name": "Künefe",
+        "price": 80,
+        "quantity": 1
+      }
+    ],
+    "total": 2015,
+    "status": "ready",
+    "created_at": "2025-12-05T23:36:47.181641",
+    "updated_at": "2025-12-21T13:17:38.965671"
+  },
+  {
+    "id": "68cb53c0-4a5e-44f8-a4d2-3a4f4564459c",
+    "table_number": 10,
+    "items": [
+      {
+        "id": "5",
+        "name": "Kola",
+        "price": 20,
+        "quantity": 6
+      },
+      {
+        "id": "3",
+        "name": "Karışık Izgara",
+        "price": 180,
+        "quantity": 2
+      },
+      {
+        "id": "1",
+        "name": "Izgara Köfte",
+        "price": 120,
+        "quantity": 2
+      },
+      {
+        "id": "9",
+        "name": "Ciğer",
+        "price": 220,
+        "quantity": 2
+      }
+    ],
+    "total": 1160,
+    "status": "delivered",
+    "created_at": "2025-12-07T19:48:23.493389",
+    "updated_at": "2025-12-14T20:28:36.629703"
+  },
+  {
+    "id": "504c3c4c-9d29-4136-95bb-83ed65784eb0",
+    "table_number": 13,
+    "items": [
+      {
+        "id": "3",
+        "name": "Karışık Izgara",
+        "price": 180,
+        "quantity": 1
+      },
+      {
+        "id": "4",
+        "name": "Ayran",
+        "price": 15,
+        "quantity": 6
+      },
+      {
+        "id": "10",
+        "name": "Keledoş",
+        "price": 450,
+        "quantity": 1
+      }
+    ],
+    "total": 720,
+    "status": "delivered",
+    "created_at": "2025-12-07T23:08:32.112293",
+    "updated_at": "2025-12-08T15:07:29.881413"
+  },
+  {
+    "id": "dbf5cf5a-8191-4b41-b587-a4135e13b906",
+    "table_number": 14,
+    "items": [
+      {
+        "id": "1",
+        "name": "Izgara Köfte",
+        "price": 300,
+        "quantity": 1
+      },
+      {
+        "id": "10",
+        "name": "Keledoş",
+        "price": 450,
+        "quantity": 1
+      },
+      {
+        "id": "13",
+        "name": "Kebap",
+        "price": 350,
+        "quantity": 1
+      },
+      {
+        "id": "14",
+        "name": "Perde Pilav",
+        "price": 280,
+        "quantity": 1
+      },
+      {
+        "id": "3",
+        "name": "Karışık Izgara",
+        "price": 180,
+        "quantity": 1
+      },
+      {
+        "id": "9",
+        "name": "Ciğer",
+        "price": 220,
+        "quantity": 2
+      }
+    ],
+    "total": 2000,
+    "status": "delivered",
+    "created_at": "2025-12-08T10:03:11.127526",
+    "updated_at": "2025-12-08T15:07:32.603257"
+  },
+  {
+    "id": "437e05c5-fcfc-4790-9c1f-b6f7464a8323",
+    "table_number": 10,
+    "items": [
+      {
+        "id": "3",
+        "name": "Karışık Izgara",
+        "price": 180,
+        "quantity": 2
+      },
+      {
+        "id": "5",
+        "name": "Kola",
+        "price": 20,
+        "quantity": 1
+      },
+      {
+        "id": "6",
+        "name": "Künefe",
+        "price": 80,
+        "quantity": 1
+      },
+      {
+        "id": "9",
+        "name": "Ciğer",
+        "price": 220,
+        "quantity": 1
+      },
+      {
+        "id": "12",
+        "name": "Şalgam",
+        "price": 40,
+        "quantity": 1
+      }
+    ],
+    "total": 720,
+    "status": "delivered",
+    "created_at": "2025-12-08T15:07:06.359383",
+    "updated_at": "2025-12-14T20:28:34.530550"
+  },
+  {
+    "id": "23554cac-cf19-4860-8cca-75c3a4c43c72",
+    "table_number": 10,
+    "items": [
+      {
+        "id": "2",
+        "name": "Tavuk Şiş",
+        "price": 110,
+        "quantity": 1
+      },
+      {
+        "id": "3",
+        "name": "Karışık Izgara",
+        "price": 180,
+        "quantity": 2
+      },
+      {
+        "id": "15",
+        "name": "Baklava",
+        "price": 160,
+        "quantity": 3
+      }
+    ],
+    "total": 950,
+    "status": "pending",
+    "created_at": "2025-12-14T20:52:19.317857",
+    "updated_at": "2025-12-14T20:52:19.317868"
+  },
+  {
+    "id": "d1a3963f-9528-4b33-9631-24c1585434ac",
+    "table_number": 7,
+    "items": [
+      {
+        "id": "2",
+        "name": "Tavuk Şiş",
+        "price": 180,
+        "quantity": 1
+      },
+      {
+        "id": "1",
+        "name": "Izgara Köfte",
+        "price": 300,
+        "quantity": 1
+      }
+    ],
+    "total": 480,
+    "status": "pending",
+    "created_at": "2025-12-21T13:07:10.760240",
+    "updated_at": "2025-12-21T13:07:10.760250"
+  },
+  {
+    "id": "292f64ee-479c-4b70-9a54-943285e36bc8",
+    "table_number": 12,
+    "items": [
+      {
+        "id": "9",
+        "name": "Ciğer",
+        "price": 380,
+        "quantity": 1
+      },
+      {
+        "id": "11",
+        "name": "Çay",
+        "price": 25,
+        "quantity": 2
+      }
+    ],
+    "total": 430,
+    "status": "ready",
+    "created_at": "2025-12-21T13:23:30.495552",
+    "updated_at": "2025-12-21T13:23:46.826232"
+  }
+]

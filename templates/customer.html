@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sipariş Ver</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        
+        .container { display: flex; height: 100vh; }
+        
+        .sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; }
+        .sidebar h3 { margin-bottom: 20px; }
+        .category-btn { 
+            width: 100%; padding: 12px; margin: 5px 0; 
+            background: #34495e; border: none; color: white;
+            cursor: pointer; border-radius: 5px; text-align: left;
+        }
+        .category-btn:hover, .category-btn.active { background: #1abc9c; }
+        
+        .main-content { flex: 1; padding: 20px; overflow-y: auto; }
+        .header { 
+            background: white; padding: 20px; border-radius: 10px; 
+            margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        
+        .call-waiter-btn {
+            padding: 12px 24px; background: #e74c3c; color: white;
+            border: none; border-radius: 5px; cursor: pointer;
+            font-size: 16px; font-weight: bold;
+        }
+        .call-waiter-btn:hover { background: #c0392b; }
+        
+        .menu-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px; margin-top: 20px;
+        }
+        .menu-item {
+            background: white; border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .menu-item:hover { transform: translateY(-5px); }
+        
+        .menu-item-image {
+            width: 100%; height: 200px; object-fit: cover;
+            background: #ecf0f1;
+        }
+        
+        .menu-item-content {
+            padding: 20px;
+        }
+        
+        .menu-item h4 { color: #2c3e50; margin-bottom: 10px; font-size: 18px; }
+        .menu-item .price { color: #27ae60; font-size: 20px; font-weight: bold; }
+        .add-btn {
+            width: 100%; padding: 10px; margin-top: 15px;
+            background: #3498db; color: white; border: none;
+            border-radius: 5px; cursor: pointer; font-weight: bold;
+        }
+        .add-btn:hover { background: #2980b9; }
+        
+        .cart-sidebar {
+            width: 350px; background: white; padding: 20px;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column;
+        }
+        .cart-sidebar h3 { margin-bottom: 20px; color: #2c3e50; }
+        .cart-items { flex: 1; overflow-y: auto; }
+        .cart-item {
+            padding: 15px; border-bottom: 1px solid #ecf0f1;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .cart-item-info { flex: 1; }
+        .cart-item-controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn {
+            width: 30px; height: 30px; border: none;
+            background: #3498db; color: white; border-radius: 5px;
+            cursor: pointer; font-size: 16px;
+        }
+        .qty-btn:hover { background: #2980b9; }
+        
+        .cart-footer { margin-top: 20px; padding-top: 20px; border-top: 2px solid #ecf0f1; }
+        .cart-total { font-size: 24px; font-weight: bold; color: #2c3e50; margin-bottom: 15px; }
+        .table-select { 
+            width: 100%; padding: 12px; margin-bottom: 15px;
+            border: 2px solid #3498db; border-radius: 5px; font-size: 16px;
+        }
+        .order-btn {
+            width: 100%; padding: 15px; background: #27ae60;
+            color: white; border: none; border-radius: 5px;
+            font-size: 18px; cursor: pointer; font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .order-btn:hover { background: #229954; }
+        .order-btn:disabled { background: #95a5a6; cursor: not-allowed; }
+        
+        /* Modal Stilleri */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            width: 90%;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .close-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-cancel { background: #95a5a6; color: white; }
+        .btn-confirm { background: #27ae60; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Kategoriler</h3>
+            <button class="category-btn active" onclick="filterCategory('all')">Tümü</button>
+            <div id="categories"></div>
+        </div>
+        
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <h1>Menümüz</h1>
+                    <p>Lütfen siparişlerinizi seçin</p>
+                </div>
+                <button class="call-waiter-btn" onclick="showCallWaiterModal()">
+                    📞 Garson Çağır
+                </button>
+            </div>
+            <div class="menu-grid" id="menuGrid"></div>
+        </div>
+        
+        <div class="cart-sidebar">
+            <h3>🛒 Sepetim</h3>
+            <div class="cart-items" id="cartItems">
+                <p style="text-align: center; color: #95a5a6; padding: 20px;">Sepetiniz boş</p>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    Toplam: <span id="cartTotal">0</span> ₺
+                </div>
+                <select class="table-select" id="tableSelect">
+                    <option value="">Masa Seçin</option>
+                </select>
+                <button class="order-btn" id="orderBtn" onclick="placeOrder()">Siparişi Tamamla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Garson Çağırma Modal -->
+    <div class="modal" id="callWaiterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Garson Çağır</h2>
+                <button class="close-btn" onclick="closeCallModal()">×</button>
+            </div>
+            <p style="margin-bottom: 20px; color: #7f8c8d;">
+                Hangi masa için garson çağırmak istiyorsunuz?
+            </p>
+            <select class="table-select" id="callTableSelect">
+                <option value="">Masa Seçin</option>
+            </select>
+            <div class="modal-buttons">
+                <button class="modal-btn btn-cancel" onclick="closeCallModal()">İptal</button>
+                <button class="modal-btn btn-confirm" onclick="callWaiter()">Çağır</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let menu = [];
+        let categories = [];
+        let cart = [];
+        let currentCategory = 'all';
+        
+        // URL'den masa numarasını al
+        const pathParts = window.location.pathname.split('/');
+        const urlTableNumber = pathParts[2] ? parseInt(pathParts[2]) : null;
+
+        // Verileri yükle
+        async function loadData() {
+            const response = await fetch('/api/menu');
+            const data = await response.json();
+            menu = data.menu;
+            categories = data.categories;
+            
+            renderCategories();
+            renderMenu();
+            loadTables();
+        }
+
+        // Kategorileri render et
+        function renderCategories() {
+            const container = document.getElementById('categories');
+            container.innerHTML = categories.map(cat => 
+                `<button class="category-btn" onclick="filterCategory('${cat.id}')">${cat.name}</button>`
+            ).join('');
+        }
+
+        // Masaları yükle
+        async function loadTables() {
+            const response = await fetch('/api/tables');
+            const data = await response.json();
+            const select1 = document.getElementById('tableSelect');
+            const select2 = document.getElementById('callTableSelect');
+            
+            data.tables.forEach(table => {
+                const option1 = document.createElement('option');
+                option1.value = table.number;
+                option1.textContent = `Masa ${table.number}`;
+                select1.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = table.number;
+                option2.textContent = `Masa ${table.number}`;
+                select2.appendChild(option2);
+            });
+            
+            // URL'den gelen masa numarasını otomatik seç
+            if (urlTableNumber) {
+                select1.value = urlTableNumber;
+                select2.value = urlTableNumber;
+                // Masa numarasını vurgula
+                const header = document.querySelector('.header h1');
+                header.innerHTML = `Menümüz <span style="color: #e74c3c;">(Masa ${urlTableNumber})</span>`;
+            }
+        }
+
+        // Kategori filtreleme
+        function filterCategory(categoryId) {
+            currentCategory = categoryId;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderMenu();
+        }
+
+        // Menüyü render et
+        function renderMenu() {
+            const container = document.getElementById('menuGrid');
+            const filteredMenu = currentCategory === 'all' 
+                ? menu 
+                : menu.filter(item => item.category === currentCategory);
+            
+            container.innerHTML = filteredMenu.map(item => `
+                <div class="menu-item">
+                    <img src="${item.image || 'https://via.placeholder.com/280x200?text=Yemek'}" 
+                         alt="${item.name}" 
+                         class="menu-item-image"
+                         onerror="this.src='https://via.placeholder.com/280x200?text=Yemek'">
+                    <div class="menu-item-content">
+                        <h4>${item.name}</h4>
+                        <p class="price">${item.price} ₺</p>
+                        <button class="add-btn" onclick="addToCart('${item.id}')">Sepete Ekle</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Sepete ekle
+        function addToCart(itemId) {
+            const item = menu.find(m => m.id === itemId);
+            const cartItem = cart.find(c => c.id === itemId);
+            
+            if (cartItem) {
+                cartItem.quantity++;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            
+            renderCart();
+        }
+
+        // Sepeti render et
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #95a5a6; padding: 20px;">Sepetiniz boş</p>';
+                document.getElementById('cartTotal').textContent = '0';
+                document.getElementById('orderBtn').disabled = true;
+                return;
+            }
+            
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <strong>${item.name}</strong><br>
+                        <span style="color: #27ae60;">${item.price} ₺</span>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="qty-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                        <span style="font-weight: bold;">${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cartTotal').textContent = total;
+            document.getElementById('orderBtn').disabled = false;
+        }
+
+        // Miktar güncelle
+        function updateQuantity(itemId, change) {
+            const item = cart.find(c => c.id === itemId);
+            item.quantity += change;
+            
+            if (item.quantity <= 0) {
+                cart = cart.filter(c => c.id !== itemId);
+            }
+            
+            renderCart();
+        }
+
+        // Sipariş ver
+        async function placeOrder() {
+            const tableNumber = document.getElementById('tableSelect').value;
+            
+            if (!tableNumber) {
+                alert('Lütfen masa seçin!');
+                return;
+            }
+            
+            if (cart.length === 0) {
+                alert('Sepetiniz boş!');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            const order = {
+                table_number: parseInt(tableNumber),
+                items: cart.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                })),
+                total: total
+            };
+            
+            try {
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(order)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Siparişiniz alındı! Teşekkürler.');
+                    cart = [];
+                    renderCart();
+                    document.getElementById('tableSelect').value = '';
+                }
+            } catch (error) {
+                alert('Sipariş gönderilemedi!');
+            }
+        }
+
+        // Garson çağırma modal
+        function showCallWaiterModal() {
+            document.getElementById('callWaiterModal').classList.add('active');
+        }
+
+        function closeCallModal() {
+            document.getElementById('callWaiterModal').classList.remove('active');
+        }
+
+        // Garson çağır
+        async function callWaiter() {
+            const tableNumber = document.getElementById('callTableSelect').value;
+            
+            if (!tableNumber) {
+                alert('Lütfen masa seçin!');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/calls', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        table_number: parseInt(tableNumber),
+                        message: 'Garson çağrısı'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Garson çağrıldı! En kısa sürede yanınızda olacak.');
+                    closeCallModal();
+                }
+            } catch (error) {
+                alert('Garson çağrılamadı!');
+            }
+        }
+
+        // Sayfa yüklendiğinde
+        loadData();
+    </script>
+</body>
+</html>

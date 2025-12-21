@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutfak Ekranı</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #ecf0f1; }
+        
+        .header {
+            background: #2c3e50; color: white; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header h1 { font-size: 28px; }
+        .logout-btn {
+            padding: 10px 20px; background: #e74c3c; color: white;
+            border: none; border-radius: 5px; cursor: pointer;
+        }
+        
+        .container { padding: 20px; }
+        
+        .tabs {
+            display: flex; gap: 10px; margin-bottom: 20px;
+        }
+        .tab {
+            padding: 15px 30px; background: white; border: none;
+            border-radius: 5px; cursor: pointer; font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .tab.active { background: #3498db; color: white; }
+        
+        .tables-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px; margin-bottom: 30px;
+        }
+        .table-card {
+            background: #95a5a6; padding: 20px; border-radius: 10px;
+            text-align: center; cursor: pointer; transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .table-card:hover { transform: scale(1.05); }
+        .table-card.has-order { background: #e74c3c; color: white; }
+        .table-card.preparing { background: #f39c12; color: white; }
+        .table-card.ready { background: #27ae60; color: white; }
+        .table-number { font-size: 24px; font-weight: bold; }
+        
+        .modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+            align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 10px;
+            max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;
+        }
+        .modal-header {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 20px;
+        }
+        .close-btn {
+            background: #e74c3c; color: white; border: none;
+            width: 30px; height: 30px; border-radius: 50%;
+            cursor: pointer; font-size: 20px;
+        }
+        
+        .order-item {
+            padding: 15px; background: #ecf0f1; border-radius: 5px;
+            margin-bottom: 10px; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        
+        .status-buttons {
+            display: flex; gap: 10px; margin-top: 20px;
+        }
+        .status-btn {
+            flex: 1; padding: 15px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 16px; color: white; font-weight: bold;
+        }
+        .btn-pending { background: #e74c3c; }
+        .btn-preparing { background: #f39c12; }
+        .btn-ready { background: #27ae60; }
+        .btn-delivered { background: #3498db; }
+        
+        .completed-orders {
+            background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .completed-order {
+            padding: 15px; border-bottom: 1px solid #ecf0f1;
+            display: flex; justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>👨‍🍳 Mutfak Ekranı</h1>
+        <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+    </div>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('active')">Aktif Siparişler</button>
+            <button class="tab" onclick="showTab('completed')">Tamamlanan Siparişler</button>
+        </div>
+        
+        <div id="activeTab">
+            <h2 style="margin-bottom: 20px;">Masalar</h2>
+            <div class="tables-grid" id="tablesGrid"></div>
+        </div>
+        
+        <div id="completedTab" style="display: none;">
+            <div class="completed-orders" id="completedOrders"></div>
+        </div>
+    </div>
+    
+    <!-- Sipariş Detay Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Masa <span id="modalTableNumber"></span> - Sipariş Detayı</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            
+            <div id="orderDetails"></div>
+            
+            <div class="status-buttons" id="statusButtons"></div>
+        </div>
+    </div>
+
+    <script>
+        let orders = [];
+        let currentOrder = null;
+
+        // Verileri yükle
+        async function loadOrders() {
+            try {
+                const response = await fetch('/api/orders');
+                const data = await response.json();
+                orders = data.orders;
+                renderTables();
+            } catch (error) {
+                console.error('Siparişler yüklenemedi:', error);
+            }
+        }
+
+        // Masaları render et
+        function renderTables() {
+            const container = document.getElementById('tablesGrid');
+            const tableOrders = {};
+            
+            // Siparişleri masalara göre grupla
+            orders.filter(o => o.status !== 'delivered').forEach(order => {
+                if (!tableOrders[order.table_number]) {
+                    tableOrders[order.table_number] = [];
+                }
+                tableOrders[order.table_number].push(order);
+            });
+            
+            // 30 masa oluştur
+            let html = '';
+            for (let i = 1; i <= 30; i++) {
+                const hasOrder = tableOrders[i];
+                let className = 'table-card';
+                
+                if (hasOrder) {
+                    const latestOrder = hasOrder[hasOrder.length - 1];
+                    if (latestOrder.status === 'pending') className += ' has-order';
+                    else if (latestOrder.status === 'preparing') className += ' preparing';
+                    else if (latestOrder.status === 'ready') className += ' ready';
+                }
+                
+                html += `
+                    <div class="${className}" onclick="showOrderDetails(${i})">
+                        <div class="table-number">Masa ${i}</div>
+                        ${hasOrder ? `<div>${hasOrder.length} sipariş</div>` : '<div>Boş</div>'}
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Sipariş detaylarını göster
+        function showOrderDetails(tableNumber) {
+            const tableOrders = orders.filter(o => 
+                o.table_number === tableNumber && o.status !== 'delivered'
+            );
+            
+            if (tableOrders.length === 0) {
+                alert('Bu masada aktif sipariş yok');
+                return;
+            }
+            
+            currentOrder = tableOrders[tableOrders.length - 1];
+            document.getElementById('modalTableNumber').textContent = tableNumber;
+            
+            // Sipariş detaylarını göster
+            let detailsHtml = '<div style="margin-bottom: 20px;">';
+            detailsHtml += `<p style="color: #7f8c8d; margin-bottom: 10px;">
+                Sipariş Zamanı: ${new Date(currentOrder.created_at).toLocaleString('tr-TR')}
+            </p>`;
+            
+            currentOrder.items.forEach(item => {
+                detailsHtml += `
+                    <div class="order-item">
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            <span style="color: #7f8c8d;">Adet: ${item.quantity}</span>
+                        </div>
+                        <div style="font-weight: bold; color: #27ae60;">
+                            ${item.price * item.quantity} ₺
+                        </div>
+                    </div>
+                `;
+            });
+            
+            detailsHtml += `<div style="text-align: right; margin-top: 15px; font-size: 20px; font-weight: bold;">
+                Toplam: ${currentOrder.total} ₺
+            </div>`;
+            detailsHtml += '</div>';
+            
+            document.getElementById('orderDetails').innerHTML = detailsHtml;
+            
+            // Durum butonlarını göster
+            let buttonsHtml = '';
+            if (currentOrder.status === 'pending') {
+                buttonsHtml = `
+                    <button class="status-btn btn-preparing" onclick="updateOrderStatus('preparing')">
+                        Hazırlanıyor
+                    </button>
+                `;
+            } else if (currentOrder.status === 'preparing') {
+                buttonsHtml = `
+                    <button class="status-btn btn-ready" onclick="updateOrderStatus('ready')">
+                        Hazır
+                    </button>
+                `;
+            } else if (currentOrder.status === 'ready') {
+                buttonsHtml = `
+                    <button class="status-btn btn-delivered" onclick="updateOrderStatus('delivered')">
+                        Teslim Edildi
+                    </button>
+                `;
+            }
+            
+            document.getElementById('statusButtons').innerHTML = buttonsHtml;
+            document.getElementById('orderModal').classList.add('active');
+        }
+
+        // Sipariş durumunu güncelle
+        async function updateOrderStatus(status) {
+            try {
+                const response = await fetch(`/api/orders/${currentOrder.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: status })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (status === 'ready') {
+                        alert(`Masa ${currentOrder.table_number} siparişi hazır! Garson bilgilendirildi.`);
+                    }
+                    closeModal();
+                    loadOrders();
+                }
+            } catch (error) {
+                alert('Durum güncellenemedi!');
+            }
+        }
+
+        // Modal kapat
+        function closeModal() {
+            document.getElementById('orderModal').classList.remove('active');
+        }
+
+        // Tab değiştir
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (tab === 'active') {
+                document.getElementById('activeTab').style.display = 'block';
+                document.getElementById('completedTab').style.display = 'none';
+            } else {
+                document.getElementById('activeTab').style.display = 'none';
+                document.getElementById('completedTab').style.display = 'block';
+                loadCompletedOrders();
+            }
+        }
+
+        // Tamamlanan siparişleri yükle
+        function loadCompletedOrders() {
+            const completed = orders.filter(o => o.status === 'delivered');
+            const container = document.getElementById('completedOrders');
+            
+            if (completed.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #95a5a6; padding: 20px;">Tamamlanan sipariş yok</p>';
+                return;
+            }
+            
+            container.innerHTML = completed.map(order => `
+                <div class="completed-order">
+                    <div>
+                        <strong>Masa ${order.table_number}</strong><br>
+                        <span style="color: #7f8c8d; font-size: 14px;">
+                            ${new Date(order.updated_at).toLocaleString('tr-TR')}
+                        </span>
+                    </div>
+                    <div style="text-align: right;">
+                        <strong>${order.total} ₺</strong><br>
+                        <span style="color: #27ae60; font-size: 14px;">✓ Teslim Edildi</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Çıkış yap
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
+        // Otomatik yenileme (5 saniyede bir)
+        setInterval(loadOrders, 5000);
+        
+        // Sayfa yüklendiğinde
+        loadOrders();
+    </script>
+</body>
+</html>

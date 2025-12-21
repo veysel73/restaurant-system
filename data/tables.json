@@ -1,0 +1,138 @@
+[
+  {
+    "number": 1,
+    "status": "occupied"
+  },
+  {
+    "number": 2,
+    "status": "empty"
+  },
+  {
+    "number": 3,
+    "status": "occupied"
+  },
+  {
+    "number": 4,
+    "status": "empty"
+  },
+  {
+    "number": 5,
+    "status": "occupied"
+  },
+  {
+    "number": 6,
+    "status": "occupied"
+  },
+  {
+    "number": 7,
+    "status": "occupied"
+  },
+  {
+    "number": 8,
+    "status": "empty"
+  },
+  {
+    "number": 9,
+    "status": "empty"
+  },
+  {
+    "number": 10,
+    "status": "occupied"
+  },
+  {
+    "number": 11,
+    "status": "empty"
+  },
+  {
+    "number": 12,
+    "status": "occupied"
+  },
+  {
+    "number": 13,
+    "status": "empty"
+  },
+  {
+    "number": 14,
+    "status": "occupied"
+  },
+  {
+    "number": 15,
+    "status": "occupied"
+  },
+  {
+    "number": 16,
+    "status": "empty"
+  },
+  {
+    "number": 17,
+    "status": "empty"
+  },
+  {
+    "number": 18,
+    "status": "empty"
+  },
+  {
+    "number": 19,
+    "status": "occupied"
+  },
+  {
+    "number": 20,
+    "status": "empty"
+  },
+  {
+    "number": 21,
+    "status": "occupied"
+  },
+  {
+    "number": 22,
+    "status": "empty"
+  },
+  {
+    "number": 23,
+    "status": "occupied"
+  },
+  {
+    "number": 24,
+    "status": "occupied"
+  },
+  {
+    "number": 25,
+    "status": "empty"
+  },
+  {
+    "number": 26,
+    "status": "empty"
+  },
+  {
+    "number": 27,
+    "status": "empty"
+  },
+  {
+    "number": 28,
+    "status": "empty"
+  },
+  {
+    "number": 29,
+    "status": "occupied"
+  },
+  {
+    "number": 30,
+    "status": "empty"
+  },
+  {
+    "number": 31,
+    "status": "empty"
+  },
+  {
+    "number": 32,
+    "status": "occupied"
+  },
+  {
+    "number": 33,
+    "status": "occupied"
+  },
+  {
+    "number": 34,
+    "status": "occupied"
+  }
+]

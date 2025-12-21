@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garson Ekranı</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #ecf0f1; }
+        
+        .header {
+            background: #16a085; color: white; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header h1 { font-size: 28px; }
+        .logout-btn {
+            padding: 10px 20px; background: #e74c3c; color: white;
+            border: none; border-radius: 5px; cursor: pointer;
+        }
+        
+        .container { display: flex; height: calc(100vh - 80px); }
+        
+        .sidebar {
+            width: 350px; background: white; padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .sidebar h3 {
+            margin-bottom: 15px; color: #2c3e50;
+            padding-bottom: 10px; border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .notification {
+            background: #27ae60; color: white; padding: 15px;
+            border-radius: 5px; margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .notification strong { font-size: 18px; display: block; margin-bottom: 5px; }
+        
+        .call-item {
+            background: #f39c12; color: white; padding: 15px;
+            border-radius: 5px; margin-bottom: 10px;
+            display: flex; justify-content: space-between;
+            align-items: center;
+        }
+        .close-call-btn {
+            background: #e74c3c; color: white; border: none;
+            padding: 8px 15px; border-radius: 5px; cursor: pointer;
+        }
+        
+        .main-content { flex: 1; padding: 20px; overflow-y: auto; }
+        
+        .tables-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .table-card {
+            background: #95a5a6; padding: 25px; border-radius: 10px;
+            text-align: center; cursor: pointer; transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: relative;
+        }
+        .table-card:hover { transform: scale(1.05); }
+        .table-card.occupied { background: #e74c3c; color: white; }
+        .table-card.empty { background: #27ae60; color: white; }
+        .table-number { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .table-status { font-size: 14px; }
+        
+        .status-badge {
+            position: absolute; top: 10px; right: 10px;
+            width: 15px; height: 15px; border-radius: 50%;
+            background: white;
+        }
+        
+        .modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.7);
+            align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 10px;
+            max-width: 500px; width: 90%;
+        }
+        .modal-header {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 20px;
+        }
+        .close-btn {
+            background: #e74c3c; color: white; border: none;
+            width: 30px; height: 30px; border-radius: 50%;
+            cursor: pointer; font-size: 20px;
+        }
+        
+        .status-buttons {
+            display: flex; gap: 10px; margin-top: 20px;
+        }
+        .status-btn {
+            flex: 1; padding: 15px; border: none; border-radius: 5px;
+            cursor: pointer; font-size: 16px; color: white; font-weight: bold;
+        }
+        .btn-occupied { background: #e74c3c; }
+        .btn-empty { background: #27ae60; }
+        
+        .no-notifications {
+            text-align: center; color: #95a5a6; padding: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧑‍💼 Garson Ekranı</h1>
+        <button class="logout-btn" onclick="logout()">Çıkış Yap</button>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h3>🔔 Bildirimler</h3>
+            <div id="notifications">
+                <p class="no-notifications">Bildirim yok</p>
+            </div>
+            
+            <h3 style="margin-top: 30px;">📞 Müşteri Çağrıları</h3>
+            <div id="customerCalls">
+                <p class="no-notifications">Çağrı yok</p>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <h2 style="margin-bottom: 20px;">Masalar</h2>
+            <div class="tables-grid" id="tablesGrid"></div>
+        </div>
+    </div>
+    
+    <!-- Masa Durum Modal -->
+    <div class="modal" id="tableModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Masa <span id="modalTableNumber"></span></h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            
+            <p style="margin-bottom: 20px; color: #7f8c8d;">
+                Masa durumunu değiştirin:
+            </p>
+            
+            <div class="status-buttons">
+                <button class="status-btn btn-occupied" onclick="updateTableStatus('occupied')">
+                    Dolu
+                </button>
+                <button class="status-btn btn-empty" onclick="updateTableStatus('empty')">
+                    Boş
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tables = [];
+        let orders = [];
+        let calls = [];
+        let currentTable = null;
+
+        // Verileri yükle
+        async function loadData() {
+            try {
+                const [tablesRes, ordersRes, callsRes] = await Promise.all([
+                    fetch('/api/tables'),
+                    fetch('/api/orders'),
+                    fetch('/api/calls')
+                ]);
+                
+                const tablesData = await tablesRes.json();
+                const ordersData = await ordersRes.json();
+                const callsData = await callsRes.json();
+                
+                tables = tablesData.tables;
+                orders = ordersData.orders;
+                calls = callsData.calls;
+                
+                renderTables();
+                renderNotifications();
+                renderCalls();
+            } catch (error) {
+                console.error('Veriler yüklenemedi:', error);
+            }
+        }
+
+        // Masaları render et
+        function renderTables() {
+            const container = document.getElementById('tablesGrid');
+            
+            container.innerHTML = tables.map(table => {
+                const status = table.status === 'occupied' ? 'occupied' : 'empty';
+                const statusText = table.status === 'occupied' ? 'Dolu' : 'Boş';
+                
+                return `
+                    <div class="table-card ${status}" onclick="showTableModal(${table.number})">
+                        <div class="status-badge"></div>
+                        <div class="table-number">Masa ${table.number}</div>
+                        <div class="table-status">${statusText}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Bildirimleri render et (Hazır siparişler)
+        function renderNotifications() {
+            const readyOrders = orders.filter(o => o.status === 'ready');
+            const container = document.getElementById('notifications');
+            
+            if (readyOrders.length === 0) {
+                container.innerHTML = '<p class="no-notifications">Bildirim yok</p>';
+                return;
+            }
+            
+            container.innerHTML = readyOrders.map(order => `
+                <div class="notification">
+                    <strong>🍽️ Sipariş Hazır!</strong>
+                    Masa ${order.table_number} - ${order.items.length} ürün
+                    <div style="margin-top: 5px; font-size: 14px;">
+                        ${new Date(order.updated_at).toLocaleTimeString('tr-TR')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Masa modalını göster
+        function showTableModal(tableNumber) {
+            currentTable = tables.find(t => t.number === tableNumber);
+            document.getElementById('modalTableNumber').textContent = tableNumber;
+            document.getElementById('tableModal').classList.add('active');
+        }
+
+        // Masa durumunu güncelle
+        async function updateTableStatus(status) {
+            try {
+                const response = await fetch(`/api/tables/${currentTable.number}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: status })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeModal();
+                    loadData();
+                }
+            } catch (error) {
+                alert('Masa durumu güncellenemedi!');
+            }
+        }
+
+        // Modal kapat
+        function closeModal() {
+            document.getElementById('tableModal').classList.remove('active');
+        }
+
+        // Çıkış yap
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
+        // Otomatik yenileme (3 saniyede bir)
+        setInterval(loadData, 3000);
+        
+        // Sayfa yüklendiğinde
+        loadData();
+        
+        // Yeni bildirim kontrolü (ses çalma için)
+        let lastReadyCount = 0;
+        setInterval(() => {
+            const readyOrders = orders.filter(o => o.status === 'ready');
+            if (readyOrders.length > lastReadyCount) {
+                // Yeni bildirim var - burada ses çalabilirsiniz
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('Yeni Sipariş Hazır!', {
+                        body: `Masa ${readyOrders[readyOrders.length - 1].table_number} siparişi hazır`,
+                        icon: '🍽️'
+                    });
+                }
+            }
+            lastReadyCount = readyOrders.length;
+        }, 5000);
+        
+        // Çağrıları render et
+        function renderCalls() {
+            const container = document.getElementById('customerCalls');
+            
+            if (calls.length === 0) {
+                container.innerHTML = '<p class="no-notifications">Çağrı yok</p>';
+                return;
+            }
+            
+            container.innerHTML = calls.map(call => `
+                <div class="call-item">
+                    <div>
+                        <strong>📞 Masa ${call.table_number}</strong><br>
+                        <span style="font-size: 14px;">
+                            ${new Date(call.created_at).toLocaleTimeString('tr-TR')}
+                        </span>
+                    </div>
+                    <button class="close-call-btn" onclick="closeCall('${call.id}')">✓</button>
+                </div>
+            `).join('');
+        }
+
+        // Çağrıyı kapat
+        async function closeCall(callId) {
+            try {
+                const response = await fetch(`/api/calls/${callId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    loadData();
+                }
+            } catch (error) {
+                console.error('Çağrı kapatılamadı:', error);
+            }
+        }
+        
+        // Bildirim izni iste
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    </script>
+</body>
+</html>
