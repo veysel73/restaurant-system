@@ -221,30 +221,69 @@ def update_table(table_number):
     return jsonify({"error": "Masa bulunamadı"}), 404
 
 # API: Menü ekle/güncelle (Admin)
+# @app.route('/api/menu', methods=['POST'])
+# @login_required(role='admin')
+# def add_menu_item():
+#     data = request.json
+#     menu = load_json(MENU_FILE, [])
+    
+#     if 'id' in data and data['id']:
+#         # Güncelleme
+#         for item in menu:
+#             if item['id'] == data['id']:
+#                 item.update(data)
+#                 save_json(MENU_FILE, menu)
+#                 return jsonify({"success": True, "item": item})
+#     else:
+#         # Yeni ekleme
+#         new_item = {
+#             "id": str(len(menu) + 1),
+#             "name": data['name'],
+#             "price": data['price'],
+#             "category": data['category']
+#         }
+#         menu.append(new_item)
+#         save_json(MENU_FILE, menu)
+#         return jsonify({"success": True, "item": new_item})
+
+
+# API: Menü ekle/güncelle (Admin) - DÜZELTİLMİŞ VERSİYON
 @app.route('/api/menu', methods=['POST'])
 @login_required(role='admin')
 def add_menu_item():
     data = request.json
     menu = load_json(MENU_FILE, [])
     
+    print(f"Received data: {data}")  # DEBUG için
+    
     if 'id' in data and data['id']:
         # Güncelleme
         for item in menu:
             if item['id'] == data['id']:
-                item.update(data)
+                # Tüm alanları güncelle, image dahil
+                item.update({
+                    'name': data['name'],
+                    'price': data['price'],
+                    'category': data['category'],
+                    'image': data.get('image', item.get('image', ''))  # Resmi koru veya güncelle
+                })
                 save_json(MENU_FILE, menu)
                 return jsonify({"success": True, "item": item})
     else:
-        # Yeni ekleme
+        # Yeni ekleme - RESİM ALANINI DA EKLEYİN!
         new_item = {
             "id": str(len(menu) + 1),
             "name": data['name'],
             "price": data['price'],
-            "category": data['category']
+            "category": data['category'],
+            "image": data.get('image', '')  # RESİM ALANINI EKLEYİN!
         }
         menu.append(new_item)
         save_json(MENU_FILE, menu)
         return jsonify({"success": True, "item": new_item})
+
+
+
 
 # API: Menü öğesi sil (Admin)
 @app.route('/api/menu/<item_id>', methods=['DELETE'])
