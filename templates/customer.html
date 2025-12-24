@@ -164,7 +164,7 @@
         .btn-confirm { background: #27ae60; color: white; }
         
         /* Responsive Tasarım */
-        @media (max-width: 768px) {
+        /* @media (max-width: 768px) {
             .container { flex-direction: column; }
             
             .sidebar { 
@@ -210,8 +210,96 @@
                 width: 95%;
                 margin: 10px;
             }
-        }
-
+        } */
+        /* Responsive Tasarım */
+@media (max-width: 768px) {
+    .container { flex-direction: column; }
+    
+    .sidebar { 
+        width: 100%; 
+        padding: 15px;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .sidebar h3 { display: inline-block; margin-right: 15px; }
+    .category-btn { 
+        display: inline-block; 
+        width: auto; 
+        margin: 0 5px;
+        padding: 10px 15px;
+    }
+    
+    .main-content { padding: 10px; padding-bottom: 80px; }
+    
+    .header { 
+        flex-direction: column; 
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .menu-grid { 
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .cart-sidebar { 
+        width: 100%; 
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 60px;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+        z-index: 100;
+        transition: max-height 0.3s ease;
+        padding: 15px 20px;
+    }
+    
+    .cart-sidebar.open {
+        max-height: 70vh;
+    }
+    
+    .cart-sidebar h3 {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0;
+    }
+    
+    .cart-sidebar h3::after {
+        content: '▼';
+        font-size: 14px;
+        transition: transform 0.3s ease;
+    }
+    
+    .cart-sidebar.open h3::after {
+        transform: rotate(180deg);
+    }
+    
+    .cart-items {
+        display: none;
+        margin-top: 20px;
+    }
+    
+    .cart-sidebar.open .cart-items {
+        display: block;
+    }
+    
+    .cart-footer {
+        display: none;
+    }
+    
+    .cart-sidebar.open .cart-footer {
+        display: block;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10px;
+    }
+}
     </style>
 </head>
 <body>
@@ -325,6 +413,13 @@
             if (urlTableNumber) {
                 select1.value = urlTableNumber;
                 select2.value = urlTableNumber;
+                // QR kod ile geldiğinde masa seçimini devre dışı bırak
+                select1.disabled = true;
+                select1.style.background = '#ecf0f1';
+                select1.style.cursor = 'not-allowed';
+                select2.disabled = true;
+                select2.style.background = '#ecf0f1';
+                select2.style.cursor = 'not-allowed';
                 // Masa numarasını vurgula
                 const header = document.querySelector('.header h1');
                 header.innerHTML = `Menümüz <span style="color: #e74c3c;">(Masa ${urlTableNumber})</span>`;
@@ -507,6 +602,12 @@
 
         // Sayfa yüklendiğinde
         loadData();
+        // Mobilde sepeti aç/kapa
+        if (window.innerWidth <= 768) {
+        document.querySelector('.cart-sidebar h3').addEventListener('click', function() {
+        document.querySelector('.cart-sidebar').classList.toggle('open');
+        });
+}
     </script>
 </body>
 </html>
